@@ -1,0 +1,41 @@
+import serial
+import tkinter
+from tkinter import ttk
+
+arduino = serial.Serial('/dev/ttyUSB0', 9600, timeout = 1)
+
+
+def temp():
+        
+    TempData = arduino.readline().decode('utf-8').strip()
+    
+   
+    if ("Temp:" in TempData):
+        TempValue = TempData.split(":")[1]
+        TempLabel.config(text = "Temp : " + TempValue + " C")
+
+    
+    root.after(1000, temp)
+
+def YellowLedPower():
+    if ( YellowLedButton.config ('text')[-1] == "ON" ):
+        arduino.write(b'1')
+        YellowLedButton.config (text = "Off")
+    else:
+        arduino.write(b'0')
+        YellowLedButton.config (text = "ON")
+
+root = tkinter.Tk()
+root.title("Temperature Monitor")
+
+TempLabel = ttk.Label(root, text = "Temp : N/A", font = ("Arial", 18))
+TempLabel.pack(pady = 30)
+
+YellowLedButton = ttk.Button(root, text = "ON", command = YellowLedPower)
+YellowLedButton.pack(pady = 20)
+
+temp()
+
+root.mainloop()
+
+arduino.close()
