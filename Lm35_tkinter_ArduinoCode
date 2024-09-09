@@ -54,8 +54,6 @@ void loop()
   }
 
 
-
-
   if (Serial.available()) 
   {
     char command = Serial.read();
