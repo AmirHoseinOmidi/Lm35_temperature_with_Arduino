@@ -1,0 +1,73 @@
+#include <Arduino.h>
+#include <Wire.h>
+
+int redLED = 13;
+int blueLED = 12;
+int yellowLED = 11;
+
+int DataCollectorTime = 1; 
+int totalTime = 5000; 
+int DataNumbers = totalTime / DataCollectorTime;
+float totalTemp = 0;
+
+
+void setup() 
+{ 
+  Serial.begin(9600);
+  pinMode(redLED, OUTPUT);
+  pinMode(blueLED, OUTPUT);
+  pinMode(yellowLED, OUTPUT);
+  
+} 
+  
+void loop() 
+{ 
+  totalTemp = 0;
+  
+
+  for (int i = 0; i < DataNumbers; i++) 
+  {
+    float tempC = analogRead(A0) * (5.0 / 10.230);
+    totalTemp += tempC;
+
+    
+    delay(DataCollectorTime);
+  }
+  
+
+  float TEMP = totalTemp / DataNumbers;
+  
+
+  Serial.print("Temp:");
+  Serial.println(TEMP);
+  
+
+  if(TEMP > 29)
+  {
+    digitalWrite(redLED, HIGH);
+    digitalWrite(blueLED, LOW);
+  }
+  else
+  {
+    digitalWrite(redLED, LOW);
+    digitalWrite(blueLED, HIGH);
+  }
+
+
+
+
+  if (Serial.available()) 
+  {
+    char command = Serial.read();
+    if (command == '1') 
+    {
+      digitalWrite(yellowLED, HIGH);
+    } 
+    else if (command == '0') 
+    {
+      digitalWrite(yellowLED, LOW);
+    }
+  }
+
+  delay(1000);
+}
