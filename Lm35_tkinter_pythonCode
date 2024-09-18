@@ -13,8 +13,6 @@ def temp():
         Temp_int = int.from_bytes(TempData, "big")
         TempLabel.config(text = "Temp :" + str(Temp_int) + "C")
 
-    
-
     root.after(1000, temp)
 
 def YellowLedPower():
